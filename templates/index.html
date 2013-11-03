@@ -2,11 +2,16 @@
 
 {% block content %}
   {% if articles %}
-    {% for article in articles_page.object_list %}        
+    {% for article in articles_page.object_list %}
+      {% if category and category == article.category.name or not category and article.category.name != 'Archive' %}
         <div class="post">
           <h2>
             <a href="{{ SITEURL }}/{{ article.url }}">
-              <i class="calendar icon"></i> {{ article.title }}
+              {% if article.category.name == 'Meetups' %}
+                <i class="calendar icon"></i>
+              {% else %}
+                <i class="archive icon"></i>
+              {% endif %} {{ article.title }}
             </a>
           </h2> 
           {{ article.content }}
@@ -20,7 +25,8 @@
           {% if loop.last and (articles_page.has_previous() or not articles_page.has_previous() and loop.length > 1) %}
             {% include 'pagination.html' %}
           {% endif %}
-        {% endif %}        
+        {% endif %}
+      {% endif %}
     {% endfor %}
   {% else %}
     <p>There are no meetups yet.</p>
